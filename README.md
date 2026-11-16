@@ -35,6 +35,11 @@ summary CSV files in the project root. It validates their schema and values at
 load time and reports a clear message if an artifact is missing or malformed.
 The source OASIS data is not needed to run the dashboard.
 
+The app supports light and dark appearance. In Streamlit, open the top-right
+menu, choose **Settings**, then select **Light** or **Dark** under **Appearance**.
+The browser remembers that preference. The dashboard theme, charts, and panels
+adapt to the selected mode.
+
 ### Single-case and batch inputs
 
 The Predict view supports the existing single-case form and CSV batch scoring.
@@ -61,7 +66,7 @@ repository's `main` branch, select `app.py` as the entry point, and use Python
 3.12. `requirements.txt` pins the runtime libraries; the scikit-learn version
 must remain `1.6.1` for the included model artifact. Keep `model.pkl` and the
 displayed result CSV files in the deployed repository. The app uses
-`.streamlit/config.toml` for its clinical blue/teal theme, upload limit,
+`.streamlit/config.toml` for its switchable clinical blue/teal theme, upload limit,
 headless server mode, and disabled usage-stat collection. Never commit
 `.streamlit/secrets.toml` or other secrets.
 

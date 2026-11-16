@@ -1,5 +1,6 @@
 import unittest
 from pathlib import Path
+import tomllib
 
 import joblib
 import numpy as np
@@ -79,6 +80,25 @@ class AppSupportTests(unittest.TestCase):
                 timeout=20
             )
             self.assertFalse(app.exception, f"Dashboard section failed: {section}")
+
+    def test_theme_configuration_allows_light_and_dark_appearance(self):
+        with (ROOT / ".streamlit" / "config.toml").open("rb") as config_file:
+            config = tomllib.load(config_file)
+        self.assertEqual(config["theme"]["base"], "light")
+        self.assertIn("light", config["theme"])
+        self.assertIn("dark", config["theme"])
+        for mode in ("light", "dark"):
+            with self.subTest(mode=mode):
+                palette = config["theme"][mode]
+                for key in (
+                    "primaryColor",
+                    "backgroundColor",
+                    "secondaryBackgroundColor",
+                    "textColor",
+                    "borderColor",
+                    "chartCategoricalColors",
+                ):
+                    self.assertIn(key, palette)
 
     def test_rejects_mismatched_model_features(self):
         bundle = dict(self.bundle)

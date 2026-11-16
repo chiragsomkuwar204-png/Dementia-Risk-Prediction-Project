@@ -360,6 +360,85 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+
+IS_DARK_THEME = st.context.theme.type == "dark"
+if IS_DARK_THEME:
+    theme_overrides = {
+        "__PAGE_BACKGROUND__": (
+            "radial-gradient(ellipse at 8% 0%, rgba(32, 132, 125, 0.14), transparent 34rem), "
+            "linear-gradient(180deg, #10191f 0%, #0c151a 100%)"
+        ),
+        "__FIGURE_BACKGROUND__": "#10191f",
+        "__HEADER_BACKGROUND__": "rgba(16, 25, 31, 0.88)",
+        "__PANEL_BACKGROUND__": "linear-gradient(145deg, #17262d 0%, #132128 100%)",
+        "__BORDER_COLOR__": "#2c414a",
+        "__MUTED_TEXT__": "#adc0c6",
+        "__STRONG_TEXT__": "#e5f0f2",
+        "__GRID_COLOR__": "#334850",
+        "__AXIS_BACKGROUND__": "#132128",
+        "__AXIS_TEXT__": "#c4d2d7",
+        "__POSITIVE_COLOR__": "#56c7ba",
+        "__NEGATIVE_COLOR__": "#86a8c7",
+    }
+else:
+    theme_overrides = {
+        "__PAGE_BACKGROUND__": (
+            "radial-gradient(ellipse at 8% 0%, rgba(13, 148, 136, 0.09), transparent 34rem), "
+            "linear-gradient(180deg, #f8fbfc 0%, #f2f7f8 100%)"
+        ),
+        "__FIGURE_BACKGROUND__": "#f8fbfc",
+        "__HEADER_BACKGROUND__": "rgba(248, 251, 252, 0.88)",
+        "__PANEL_BACKGROUND__": "linear-gradient(145deg, #ffffff 0%, #f8fbfc 100%)",
+        "__BORDER_COLOR__": "#dce8eb",
+        "__MUTED_TEXT__": "#52707a",
+        "__STRONG_TEXT__": "#123849",
+        "__GRID_COLOR__": "#dce8eb",
+        "__AXIS_BACKGROUND__": "#f8fbfc",
+        "__AXIS_TEXT__": "#385663",
+        "__POSITIVE_COLOR__": "#087e83",
+        "__NEGATIVE_COLOR__": "#587a94",
+    }
+
+st.markdown(
+    """
+    <style>
+    .stApp { background: __PAGE_BACKGROUND__ !important; }
+    [data-testid="stHeader"] { background: __HEADER_BACKGROUND__ !important; }
+    [data-testid="stSegmentedControl"] {
+        border-color: __BORDER_COLOR__;
+        background: __PANEL_BACKGROUND__;
+    }
+    [data-testid="stMetric"] {
+        border-color: __BORDER_COLOR__;
+        background: __PANEL_BACKGROUND__;
+    }
+    [data-testid="stMetricLabel"] { color: __MUTED_TEXT__; }
+    [data-testid="stMetricValue"] { color: __STRONG_TEXT__; }
+    [data-testid="stForm"] {
+        border-color: __BORDER_COLOR__;
+        background: __PANEL_BACKGROUND__;
+    }
+    [data-testid="stForm"] [data-testid="stVerticalBlockBorderWrapper"] {
+        border-color: __BORDER_COLOR__;
+        background: __PANEL_BACKGROUND__;
+    }
+    .app-footer {
+        border-top: 1px solid __BORDER_COLOR__;
+        color: __MUTED_TEXT__;
+    }
+    .app-footer strong { color: __STRONG_TEXT__; }
+    </style>
+    """.replace(
+        "__PAGE_BACKGROUND__", theme_overrides["__PAGE_BACKGROUND__"]
+    )
+    .replace("__HEADER_BACKGROUND__", theme_overrides["__HEADER_BACKGROUND__"])
+    .replace("__PANEL_BACKGROUND__", theme_overrides["__PANEL_BACKGROUND__"])
+    .replace("__BORDER_COLOR__", theme_overrides["__BORDER_COLOR__"])
+    .replace("__MUTED_TEXT__", theme_overrides["__MUTED_TEXT__"])
+    .replace("__STRONG_TEXT__", theme_overrides["__STRONG_TEXT__"]),
+    unsafe_allow_html=True,
+)
+
 st.info(
     "Do not enter identifiable or protected health information. This model is "
     "not validated for screening, diagnosis, triage, treatment, or other care. "
@@ -681,10 +760,12 @@ if view == "Predict":
                 labels.append(f"{NAMES[feature]} = {shown}")
 
             figure, axis = plt.subplots(figsize=(8, 4.8))
-            figure.patch.set_alpha(0)
-            axis.set_facecolor("#f8fbfc")
+            figure.patch.set_facecolor(theme_overrides["__FIGURE_BACKGROUND__"])
+            axis.set_facecolor(theme_overrides["__AXIS_BACKGROUND__"])
             bar_colors = [
-                "#087e83" if contributions[feature] > 0 else "#587a94"
+                theme_overrides[
+                    "__POSITIVE_COLOR__" if contributions[feature] > 0 else "__NEGATIVE_COLOR__"
+                ]
                 for feature in ordered_features
             ]
             axis.barh(
@@ -694,15 +775,29 @@ if view == "Predict":
                 height=0.62,
                 edgecolor="none",
             )
-            axis.axvline(0, color="#93aab3", linewidth=0.9)
+            axis.axvline(
+                0,
+                color=theme_overrides["__MUTED_TEXT__"],
+                linewidth=0.9,
+                alpha=0.65,
+            )
             axis.set_xlabel(
                 "← Nondementia-labelled     Contribution     Dementia-labelled →",
-                color="#526d78",
+                color=theme_overrides["__MUTED_TEXT__"],
                 labelpad=12,
             )
-            axis.tick_params(axis="both", colors="#385663", labelsize=9, length=0)
+            axis.tick_params(
+                axis="both",
+                colors=theme_overrides["__AXIS_TEXT__"],
+                labelsize=9,
+                length=0,
+            )
             axis.spines[["top", "right", "left", "bottom"]].set_visible(False)
-            axis.xaxis.grid(True, color="#dce8eb", linewidth=0.7)
+            axis.xaxis.grid(
+                True,
+                color=theme_overrides["__GRID_COLOR__"],
+                linewidth=0.7,
+            )
             axis.set_axisbelow(True)
             figure.tight_layout(pad=1.5)
             st.pyplot(
@@ -983,17 +1078,15 @@ elif view == "Results and limits":
 
 st.markdown(
     """
-    <div style="
+    <div class="app-footer" style="
       margin-top: 3rem;
       padding-top: 1.15rem;
-      border-top: 1px solid #d9e5e9;
-      color: #607983;
       font-size: 0.78rem;
       display: flex;
       justify-content: space-between;
       gap: 1rem;
       flex-wrap: wrap;">
-      <span><strong style="color:#244955;">Dementia Risk Predictor</strong> · Research prototype</span>
+      <span><strong>Dementia Risk Predictor</strong> · Research prototype</span>
       <span>For exploration only · Not for clinical decision-making</span>
     </div>
     """,
