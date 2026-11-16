@@ -2,3 +2,4 @@
 __pycache__/
 *.py[cod]
 oasis_longitudinal_cleaned.csv
+.streamlit/secrets.toml

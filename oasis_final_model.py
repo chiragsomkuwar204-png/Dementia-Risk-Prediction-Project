@@ -11,7 +11,10 @@ import shap
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import StratifiedGroupKFold, GroupShuffleSplit, cross_val_score
 
-df = pd.read_csv("oasis_longitudinal_cleaned.csv")
+from app_support import validate_training_frame
+
+
+df = validate_training_frame(pd.read_csv("oasis_longitudinal_cleaned.csv"))
 
 imaging = ['eTIV', 'nWBV', 'ASF']
 clinical = ['Age', 'SES', 'MMSE', 'M/F']
@@ -94,12 +97,5 @@ joblib.dump({
                for c in ['Age', 'MMSE', 'eTIV', 'nWBV']},
 }, "model.pkl")
 
-# requirements.txt for deployment: scikit-learn must match the version that
-# built model.pkl, otherwise the saved model may not load on the server
-import sklearn
-with open("requirements.txt", "w") as f:
-    f.write("streamlit\npandas\nnumpy\nmatplotlib\nshap\njoblib\n"
-            f"scikit-learn=={sklearn.__version__}\n")
-
-print("\nSaved model.pkl and requirements.txt")
-print("Download both from the file panel for the dashboard step.")
+print("\nSaved model.pkl and analysis outputs.")
+print("Keep the deployment requirements pinned to the model's scikit-learn version.")

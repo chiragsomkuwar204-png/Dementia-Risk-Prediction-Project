@@ -1,8 +1,29 @@
 [theme]
 base = "light"
-primaryColor = "#c2410c"
-backgroundColor = "#ffffff"
-secondaryBackgroundColor = "#f3f6fa"
-textColor = "#172b4d"
+primaryColor = "#087e83"
+backgroundColor = "#f5f9fa"
+secondaryBackgroundColor = "#eaf2f4"
+textColor = "#183746"
+borderColor = "#d9e5e9"
+linkColor = "#087e83"
+dataframeHeaderBackgroundColor = "#eaf2f4"
+dataframeHeaderTextColor = "#183746"
+dataframeBorderColor = "#d9e5e9"
+chartCategoricalColors = ["#087e83", "#456b8a", "#73b5a8", "#9d7bb5", "#d18b62"]
+baseRadius = "0.8rem"
+buttonRadius = "0.65rem"
 font = "sans serif"
+baseFontSize = 16
+headingFont = "sans serif"
+headingFontSizes = ["2.7rem", "2.1rem", "1.5rem", "1.2rem"]
+headingFontWeights = [700, 650, 600, 600]
+metricValueFontSize = "2rem"
+metricValueFontWeight = 650
 showWidgetBorder = true
+
+[server]
+headless = true
+maxUploadSize = 5
+
+[browser]
+gatherUsageStats = false
